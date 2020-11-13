@@ -1,6 +1,7 @@
 import json
 
-from flask import Flask, request
+import pandas as pd
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -23,6 +24,13 @@ def write_player():
         with open("data.json", "w") as file:
             json.dump(game_data, file, indent=4, ensure_ascii=False)
     return "Players_scores"
+
+
+@app.route("/api/v1/scores/table", methods=["GET"])
+def static_table():
+    df = pd.read_json("data.json")
+    pl = pd.json_normalize(df[::-1]["data"])
+    return render_template("scores.html", dataframe=pl.to_html())
 
 
 if __name__ == "__main__":
