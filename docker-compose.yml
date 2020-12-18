@@ -1,12 +1,24 @@
-version: '3.7'
+version: "3.7"
 
 services:
   web:
     build: .
-    command: python app.py run -h 0.0.0.0
+    command: python manage.py run -h 0.0.0.0
     volumes:
-      - .:/usr/src/game_service/
+      - .:/usr/src/flask_service/
     ports:
       - 5000:5000
     env_file:
       - ./.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=game_service
+      - POSTGRES_PASSWORD=game_service
+      - POSTGRES_DB=points_db
+volumes:
+  postgres_data:

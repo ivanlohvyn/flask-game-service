@@ -1,19 +1,19 @@
-#pull official base image
 FROM python:3.8-slim-buster
 
-#set work directory
 WORKDIR /usr/src/game_service
 
-# set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNDUFFERED 1
 
-# install dependencies
+RUN apt-get update && apt-get install -y netcat
+
 RUN pip install --upgrade pip
 COPY ./requirements.txt /usr/src/game_service/requirements.txt
 RUN pip install -r requirements.txt
 
-# copy project
-COPY . /usr/src/game_service/
+COPY . /usr/src/game_service
+
+# run entrypoint.sh
+ENTRYPOINT ["/usr/src/game_service/entrypoint.sh"]
 
 
